@@ -3334,7 +3334,7 @@ public class PatientServiceTest extends BaseContextSensitiveTest {
 		assertThat(patients.size(), is(1));
 		assertThat(patients.get(0).getPatientId(), is(2));
 
-		// // there is one patient in standardTest-1.9.7-dataSet.xml with the family name "Hornblower", but this method should *not* return family name matches
+		// there is one patient in standardTest-1.9.7-dataSet.xml with the family name "Hornblower", but this method should *not* return family name matches
 		patients = patientService.getPatientsByGivenName("Hornblower");
 		assertThat(patients.size(), is(0));
 		
@@ -3342,7 +3342,7 @@ public class PatientServiceTest extends BaseContextSensitiveTest {
 		patients = patientService.getPatientsByGivenName("Horat");
 		assertThat(patients.size(), is(0));
 
-		// // this method *should* return patients if name only differs by letter casing
+		// this method *should* return patients if name only differs by letter casing
 		patients = patientService.getPatientsByGivenName("HORATIO");
 		assertThat(patients.size(), is(1));
 		assertThat(patients.get(0).getPatientId(), is(2));
