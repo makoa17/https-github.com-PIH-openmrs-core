@@ -3347,6 +3347,18 @@ public class PatientServiceTest extends BaseContextSensitiveTest {
 		assertThat(patients.size(), is(1));
 		assertThat(patients.get(0).getPatientId(), is(2));
 
+		/*
+		 * This method should return multiple patients with identical first
+		 * names (ids #1 and #2000 in the long list of Johns), but not those
+		 * whose matching name has been voided (id #2001).
+		 */
+		executeDataSet(JOHN_PATIENTS_XML);
+		updateSearchIndex();
+
+		patients = patientService.getPatientsByGivenName("John");
+		assertThat(patients.size(), is(2));
+		assertThat(patients.get(0).getPatientId(), is(1));
+		assertThat(patients.get(1).getPatientId(), is(2000));
 	}
 
 }

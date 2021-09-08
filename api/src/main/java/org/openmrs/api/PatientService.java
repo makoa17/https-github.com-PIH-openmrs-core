@@ -854,5 +854,6 @@ public interface PatientService extends OpenmrsService {
 	 * @should not match on family name
 	 * @should not match on partial name matches
 	 */
+	@Authorized( { PrivilegeConstants.GET_PATIENTS })
 	public List<Patient> getPatientsByGivenName(String name);
 }

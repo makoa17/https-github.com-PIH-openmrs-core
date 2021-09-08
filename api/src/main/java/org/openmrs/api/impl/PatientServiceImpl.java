@@ -67,7 +67,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -1635,9 +1634,23 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 		}
 	}
 
+	/**
+	 * @see PatientService#getPatientsByGivenName(String)
+	 */
 	@Override
+	@Transactional(readOnly = true)
 	public List<Patient> getPatientsByGivenName(String name) {
-		// TODO: you should implement this method by using an underlying method provided by PatientDAO to fetch a list of patients, and then apply your own filtering logic
-		return null;
+		List<Patient> givenNamesMatch = new ArrayList<>();
+
+		for (Patient p : getPatients(name)) {
+			for (PersonName pn : p.getNames()) {
+				if (pn.getGivenName().equalsIgnoreCase(name)) {
+					givenNamesMatch.add(p);
+					break;
+				}
+			}
+		}
+
+		return givenNamesMatch;
 	}
 }
