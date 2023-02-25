@@ -844,4 +844,15 @@ public interface PatientService extends OpenmrsService {
 	 * @throws PatientIdentifierTypeLockedException
 	 */
 	public void checkIfPatientIdentifierTypesAreLocked() throws PatientIdentifierTypeLockedException;
+	
+	/**
+	 * Given a string, return all the patients whose given name is an exact, case-insensitive match for that string
+	 * additional comment added by Anthony Sopah
+	 * @param name
+	 * @return all patients with matching given name
+	 * @should match name even if cases don't match
+	 * @should not match on family name
+	 * @should not match on partial name matches
+	 */
+	public List<Patient> getPatientsByGivenName(String name);
 }
