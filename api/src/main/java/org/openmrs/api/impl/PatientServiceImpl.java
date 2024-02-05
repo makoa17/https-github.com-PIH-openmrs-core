@@ -1637,7 +1637,26 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 
 	@Override
 	public List<Patient> getPatientsByGivenName(String name) {
-		// TODO: you should implement this method by using an underlying method provided by PatientDAO to fetch a list of patients, and then apply your own filtering logic
-		return null;
+		// Alternatively we could throw an invalid input error here. It depends on if we want to bubble
+		// errors up the end user or if we want to handle invalid input silently.
+		if (StringUtils.isBlank(name)) {
+			return Collections.emptyList();
+		}
+		
+		// I'm not generally a fan of this. Needing to fetch a bunch of (somewhat filtered) data from the DB then
+		// filtering it down further on the app side is putting unneeded load on the DB. Better would be to have
+		// a query for the exact data we want. Maybe adding support to PatientIdentifierType to allow us to specify
+		// what name (given name vs surname or both) we want to search. Or even just a dedicated DAO method for this
+		// if we don't want to support custom-built queries based on variable input filters (which can cause unexpected
+		// results). Also, if we're querying patient given name frequently, it'd be worth considering adding an index
+		// on it so that we're not doing full table scans each time.
+		
+		// As an aside, we'd probably also want some kind of hard cap on the amount of rows returned so that we don't
+		// accidentally return a huge dataset and overload the server or break the frontend. In this case it's
+		// probably fine but some global server setting for controlling max rows returned is probably
+		// worth having.
+		return dao.getPatients(name, 0, null).stream()
+			.filter(p -> name.equalsIgnoreCase(p.getGivenName()))
+			.collect(Collectors.toList());
 	}
 }
